@@ -52,6 +52,9 @@ EPOCHS = 1
 RNG_SEED = 42
 AUTOTUNE = tf.data.AUTOTUNE
 
+print("REPO_ROOT:", REPO_ROOT)
+print("SPLIT_ROOT:", SPLIT_ROOT)
+print("OUTPUT_DIR:", OUTPUT_DIR)
 
 # =====================================================================
 def sanity_check_folders(root: Path):
