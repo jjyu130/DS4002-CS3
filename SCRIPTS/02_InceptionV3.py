@@ -22,12 +22,24 @@ Inputs:
 Outputs:
     - OUTPUT/inceptionv3_best.keras
     - OUTPUT/inceptionv3_final.keras
+    - Printed to terminal:
+        • class names + counts (train split)
+        • test loss / test accuracy
+        • confusion matrix
+        • per-class precision / recall / F1 / support
+        • OA, AA, κ
+        • full sklearn classification report
 """
 
 from pathlib import Path
 import numpy as np
+
+# Disables GPU devices so TensorFlow runs on CPU.
+# This avoids common Metal graph-remapper crashes on Apple Silicon.
+# Remove this if you have a compatible tensorflow-macos/metal pair.
 import tensorflow as tf
 tf.config.set_visible_devices([], "GPU")
+
 from tensorflow.keras import layers, models, optimizers, callbacks
 from tensorflow.keras.applications import InceptionV3
 from tensorflow.keras.applications.inception_v3 import preprocess_input
@@ -47,9 +59,9 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 BEST_MODEL_PATH  = OUTPUT_DIR / "inceptionv3_best.keras"
 FINAL_MODEL_PATH = OUTPUT_DIR / "inceptionv3_final.keras"
 
-IMAGE_SIZE = (224, 224)
+IMAGE_SIZE = (224, 224) # InceptionV3 expected input size
 BATCH_SIZE = 32
-EPOCHS = 10
+EPOCHS = 10 # increase if needed (e.g., 20–50)
 RNG_SEED = 42
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -92,8 +104,9 @@ def build_dataset_from_dir(split: str, shuffle: bool, return_class_names=False):
         seed=RNG_SEED,
     )
 
-    class_names = ds_raw.class_names
+    class_names = ds_raw.class_names  # alphabetical ordering by TF
 
+    # Print train split diagnostics
     if split == "train":
         print("Detected class names:", class_names)
         print("\nTrain class counts:")
@@ -102,6 +115,7 @@ def build_dataset_from_dir(split: str, shuffle: bool, return_class_names=False):
             print(f"  {cname:15s}: {count:5d}")
         print("")
 
+    # Apply ImageNet preprocessing used by InceptionV3
     def _preprocess(img, label):
         img = tf.image.convert_image_dtype(img, tf.float32)
         img = preprocess_input(img)
@@ -115,10 +129,13 @@ def build_dataset_from_dir(split: str, shuffle: bool, return_class_names=False):
 
 
 def build_inception_model(num_classes: int) -> tf.keras.Model:
-    """Construct a fully fine-tuned InceptionV3 classifier."""
+    """Construct a fully fine-tuned InceptionV3 classifier.
+          base.trainable=True updates ALL backbone weights.
+          This is slower but best for transfer to a new domain.
+      """
     base = InceptionV3(
-        include_top=False,
-        weights="imagenet",
+        include_top=False,  # remove ImageNet classifier
+        weights="imagenet", # load pretrained weights
         input_shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3),
     )
     base.trainable = True  # Full fine-tuning
@@ -126,7 +143,7 @@ def build_inception_model(num_classes: int) -> tf.keras.Model:
     inputs = layers.Input(shape=(IMAGE_SIZE[0], IMAGE_SIZE[1], 3))
     x = base(inputs)
     x = layers.GlobalAveragePooling2D()(x)
-    x = layers.Dropout(0.3)(x)
+    x = layers.Dropout(0.3)(x) # regularization to reduce overfitting
     outputs = layers.Dense(num_classes, activation="softmax")(x)
 
     model = models.Model(inputs, outputs)
@@ -143,15 +160,20 @@ def build_inception_model(num_classes: int) -> tf.keras.Model:
 
 # =====================================================================
 def main():
+    
+    # 1) Validate dataset split folder before training
     sanity_check_folders(SPLIT_ROOT)
 
+    # 2) Build tf.data datasets from disk
     print(f"Loading datasets from: {SPLIT_ROOT}\n")
     train_ds, class_names = build_dataset_from_dir("train", True, True)
     val_ds = build_dataset_from_dir("val", False)
     test_ds = build_dataset_from_dir("test", False)
-
+    
+    # 3) Build InceptionV3 fine-tuned model
     model = build_inception_model(num_classes=len(class_names))
-
+    
+    # 4) Training callbacks
     early_stop = callbacks.EarlyStopping(
         monitor="val_loss", patience=5, restore_best_weights=True
     )
@@ -164,6 +186,7 @@ def main():
         verbose=1,
     )
 
+    # 5) Train model
     print("\n>>> Starting fine-tuning...\n")
     model.fit(
         train_ds,
@@ -173,6 +196,7 @@ def main():
         verbose=1,
     )
 
+    # 6) Basic test evaluation (loss + accuracy)
     print("\nEvaluating on test set...")
     test_loss, test_acc = model.evaluate(test_ds, verbose=1)
     print(f"\nTest loss: {test_loss:.4f}")
@@ -242,7 +266,7 @@ def main():
     print("\nClassification Report:")
     print(classification_report(y_true, y_pred, target_names=class_names, digits=4, zero_division=0))
 
-
+    # 8) Save final model
     model.save(FINAL_MODEL_PATH)
     print(f"\nSaved best model to : {BEST_MODEL_PATH}")
     print(f"Saved final model to: {FINAL_MODEL_PATH}")
