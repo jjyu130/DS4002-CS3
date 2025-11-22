@@ -49,7 +49,7 @@ FINAL_MODEL_PATH = OUTPUT_DIR / "inceptionv3_final.keras"
 
 IMAGE_SIZE = (224, 224)
 BATCH_SIZE = 32
-EPOCHS = 1
+EPOCHS = 10
 RNG_SEED = 42
 AUTOTUNE = tf.data.AUTOTUNE
 
@@ -177,6 +177,71 @@ def main():
     test_loss, test_acc = model.evaluate(test_ds, verbose=1)
     print(f"\nTest loss: {test_loss:.4f}")
     print(f"Test accuracy: {test_acc:.4f}")
+
+    # ============================================
+    # Additional evaluation metrics (OA, AA, kappa)
+    # ============================================
+    
+    from sklearn.metrics import (
+        confusion_matrix,
+        classification_report,
+        cohen_kappa_score,
+        precision_recall_fscore_support
+    )
+    
+    # Collect true + predicted labels
+    y_true = []
+    y_pred = []
+    
+    print("\nComputing predictions for full evaluation...")
+    
+    for batch_imgs, batch_labels in test_ds:
+        probs = model.predict(batch_imgs, verbose=0)
+        preds = np.argmax(probs, axis=1)
+        y_true.extend(batch_labels.numpy())
+        y_pred.extend(preds)
+    
+    y_true = np.array(y_true)
+    y_pred = np.array(y_pred)
+    
+    # Confusion Matrix
+    cm = confusion_matrix(y_true, y_pred, labels=np.arange(len(class_names)))
+    
+    # Overall Accuracy (OA)
+    oa = np.trace(cm) / np.sum(cm)
+    
+    # Per-class recall (class accuracy)
+    per_class_recall = np.diag(cm) / np.maximum(cm.sum(axis=1), 1)
+    
+    # Average Accuracy (AA)
+    aa = np.mean(per_class_recall)
+    
+    # Cohen's kappa
+    kappa = cohen_kappa_score(y_true, y_pred)
+    
+    # Precision / Recall / F1 / Support
+    precision, recall, f1, support = precision_recall_fscore_support(
+        y_true, y_pred, labels=np.arange(len(class_names)), zero_division=0
+    )
+    
+    print("\n=====================")
+    print("   FULL METRICS")
+    print("=====================")
+    print(f"Overall Accuracy (OA): {oa:.4f}")
+    print(f"Average Accuracy (AA): {aa:.4f}")
+    print(f"Cohen's kappa:        {kappa:.4f}")
+    
+    print("\nConfusion Matrix:")
+    print(cm)
+    
+    print("\nPer-class metrics:")
+    for i, cname in enumerate(class_names):
+        print(f"{cname:15s} | Precision: {precision[i]:.4f}  "
+              f"Recall: {recall[i]:.4f}  F1: {f1[i]:.4f}  Support: {support[i]}")
+    
+    print("\nClassification Report:")
+    print(classification_report(y_true, y_pred, target_names=class_names, digits=4, zero_division=0))
+
 
     model.save(FINAL_MODEL_PATH)
     print(f"\nSaved best model to : {BEST_MODEL_PATH}")
