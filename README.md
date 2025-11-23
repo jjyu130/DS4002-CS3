@@ -12,8 +12,8 @@
   - `numpy` – numerical operations
   - `PIL` – image loading, conversion, resizing, preprocessing  
   - `tensorflow` – end-to-end deep learning framework
-    - `keras` → `layers`, `models`, `optimizers`, `callbacks`
-      - `applications` → `InceptionV3`, `preprocess_input`
+    - `keras` → (`layers`, `models`, `optimizers`, `callbacks`)
+      - `applications` → (`InceptionV3`, `preprocess_input`)
     
 
 ## 2. Documentation Map
