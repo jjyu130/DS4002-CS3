@@ -70,7 +70,7 @@ tabular features. The following elements effectively constitute the metadata:*
 
 **Figure 1**. Mean RGB channel values for each weather event category in the dataset.
 
-![contrast_by_class.png](contrast_by_class.png)
+![contrast_by_class.png](../OUTPUT/contrast_by_class.png)
 
 **Figure 2**. Pixel-level contrast distributions across weather event categories.
 
