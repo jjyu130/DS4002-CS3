@@ -57,8 +57,9 @@ DS4002-Project3
 ├── OUTPUT
 │   ├── RGB_by_class.png   
 │   ├── contrast_by_class.png
-│   ├── evaluation_inceptionv3_best.png
 │   ├── inceptionv3_best.keras
+│   ├── inceptionv3_confusion_matrix.png
+│   ├── inceptionv3_evaluation.png
 │   └── inceptionv3_final.png  
 ├── SCRIPTS
 │   ├── 01_preprocess_and_split.py 
@@ -79,8 +80,8 @@ DS4002-Project3
      - Otherwise, proceed with preprocessed data, which is already provided.
 3. **Run model training script**
      - Navigate to the `SCRIPTS` folder.
-     - Scripts 2-3 build and train 2 CNN models on the prepared `DATA/dataset_split/` directory.
-       Models are saved to `OUTPUT` folder.
+     - Scripts 2-4 build, train, and evaluate 2 CNN models on the prepared `DATA/dataset_split/` directory.
+       Models and evaluation metrics are saved to `OUTPUT` folder.
 
 
  
