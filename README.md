@@ -16,14 +16,47 @@ The hierarchy of folders and files contained in this project are as follows:
 ```text
 DS4002-Project3
 ├── DATA
-│   ├──
-│   └── 
+│   ├── dataset_split/               # Final 80/10/10 train–val–test split for modeling
+│   │   ├── train/
+│   │   │   ├── cellconvection/
+│   │   │   ├── duststorm/
+│   │   │   ├── hurricane/
+│   │   │   ├── rollconvection/
+│   │   │   └── wildfires/
+│   │   ├── val/
+│   │   │   ├── cellconvection/
+│   │   │   ├── duststorm/
+│   │   │   ├── hurricane/
+│   │   │   ├── rollconvection/
+│   │   │   └── wildfires/
+│   │   └── test/
+│   │       ├── cellconvection/
+│   │       ├── duststorm/
+│   │       ├── hurricane/
+│   │       ├── rollconvection/
+│   │       └── wildfires/
+│   ├── cleaned_data/                # Standardized RGB images after preprocessing
+│   │   ├── cellconvection/
+│   │   ├── duststorm/
+│   │   ├── hurricane/
+│   │   ├── rollconvection/
+│   │   └── wildfires/
+│   ├── raw_weather_images/          # Original satellite imagery from Harvard Dataverse
+│   │   ├── cellconvection/
+│   │   ├── duststorm/
+│   │   ├── hurricane/
+│   │   ├── rollconvection/
+│   │   └── wildfires/
+│   └── README.md
 ├── OUTPUT
-│   ├── 
-│   └── 
+│   ├── RGB_by_class.png   
+│   ├── contrast_by_class.png
+│   ├── evaluation_inceptionv3_best.png
+│   ├── inceptionv3_best.keras
+│   └── inceptionv3_final.png  
 ├── SCRIPTS
-│   ├── 
-│   └── 
+│   ├── 01_preprocess_and_split.py 
+│   └── 02_InceptionV3.py 
 ├── LICENSE.md
 └── README.md
 ```
