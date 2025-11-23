@@ -66,7 +66,17 @@ DS4002-Project3
      - Clone this repository: https://github.com/jjyu130/DS4002-Project3/
      - Ensure you have Python 3 installed on your system.
      - See section 1 for packages needed.
-     
+  2. **(Optional) Prepare the dataset**
+     - Run `01_preprocess_and_split.py` from the `SCRIPTS` folder, which creates
+          `cleaned_data` by processing `raw_weather_images` and splits into `dataset_split`
+          in the `DATA` folder.
+     - Otherwise, proceed with preprocessed data, which is already provided.
+3. **Run model training script**
+     - Navigate to the `SCRIPTS` folder.
+     - Scripts 2-3 build and train 2 CNN models on the prepared `DATA/dataset_split/` directory.
+       Models are saved to `OUTPUT` folder.
+
+
  
 
      
