@@ -57,7 +57,7 @@ confirm that no sensitive content is inadvertently included in the analysis.
 ## Data Dictionary
 *We use the original folder-based image organization for modeling, rather than implementing
 a manifest csv as initially intended. Thus, the dataset does not contain structured
-tabular features. The following elements effectively constitute the metadata:"
+tabular features. The following elements effectively constitute the metadata:*
 
 | **Element**   | **Type** | **Description**                                                                                                                                                   |
 | --------------| ---------| ------------------------------------------------------------------------------------------------------------------------------------------------------------------|
