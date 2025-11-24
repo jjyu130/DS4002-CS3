@@ -14,6 +14,12 @@
   - `tensorflow` – end-to-end deep learning framework
     - `keras` → (`layers`, `models`, `optimizers`, `callbacks`)
       - `applications` → (`InceptionV3`, `preprocess_input`)
+  - `torch` - tensor computation and auto-grad framework
+  - `torchvision` - datasets, transforms, pretrained vision models
+  - `tqdm` - quick, customizable progress bar utility
+  - `scikit-learn` - classical machine learning algorithms library
+  - `seaborn` - machine learning models and metrics
+  - `matplotlib` - plotting and visualization
     
 
 ## 2. Documentation Map
@@ -55,15 +61,19 @@ DS4002-Project3
 │   │   └── wildfires/
 │   └── README.md
 ├── OUTPUT
-│   ├── RGB_by_class.png   
+│   ├── best_resnet50.pth
 │   ├── contrast_by_class.png
+│   ├── evaluation_resnet50_best.png
 │   ├── inceptionv3_best.keras
 │   ├── inceptionv3_confusion_matrix.png
 │   ├── inceptionv3_evaluation.png
-│   └── inceptionv3_final.png  
+│   ├── inceptionv3_final.png  
+│   └── RGB_by_class.png   
 ├── SCRIPTS
 │   ├── 01_preprocess_and_split.py 
-│   └── 02_InceptionV3.py 
+│   ├── 02_InceptionV3.py 
+│   ├── 03_InceptionV3_confusion_matrix.py 
+│   └── 04_resnet-50.py 
 ├── LICENSE.md
 └── README.md
 ```
