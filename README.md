@@ -60,12 +60,16 @@ DS4002-Project3
 │   │   ├── rollconvection/
 │   │   └── wildfires/
 │   └── README.md
-├── OUTPUT
 ├── SCRIPTS
 │   ├── 01_preprocess_and_split.py 
 │   ├── 02_InceptionV3.py 
 │   ├── 03_InceptionV3_confusion_matrix.py 
-│   └── 04_resnet-50.py 
+│   └── 04_resnet-50.py
+├── SUPPLEMENTAL_RESOURCES
+│   ├── What is Transfer Learning.pdf
+│   ├── Is Climate Change Increasing Disaster Risk.pdf
+├── Hook_Document.pdf
+├── WeatherEventCNN-Rubric.pdf
 ├── LICENSE.md
 └── README.md
 ```
