@@ -1,4 +1,4 @@
-# Investigating Reproducibility of Weather Event Image Classifier
+# Weather Event CNNs Case Study
 
 
 ## 1. Software and Platform
